@@ -1,0 +1,29 @@
+<div class="container mt-5">
+  <h2 class="mb-4 "> Add Product</h2>
+  <form action="./add-products" method="post" enctype="multipart/form-data">
+    <!-- Product Name -->
+     <div class="mb-3">
+      <label for="name" class="form-label">Product Name</label>
+      <input type="text" class="form-control" id="name" name="name" required />
+    </div>
+     <div class="mb-3">
+      <label for="type" class="form-label">Category</label>
+      <input type="text" class="form-control" id="type" name="type" required />
+    </div>
+     <div class="mb-3">
+      <label for="price" class="form-label">Price (₹)</label>
+      <input type="text" class="form-control" id="price" maxlength=6 name="price" required oninput="this.value = this.value.replace(/[^0-9.]/g, '')"  />
+    </div>
+     <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <input type="text" class="form-control" id="description" name="description" required />
+    </div>
+     <div class="mb-3">
+      <label for="image" class="form-label">Image</label>
+      <input type="file" class="form-control" id="image" name="image" required />
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-dark">Submit</button>
+  </form>
+</div>

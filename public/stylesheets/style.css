@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+html::selection {
+    color: #f1f1f1;
+    background-color: #131313;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:active {
+    background-color: #131313;
+    color:#f1f1f1;
+}
+
+

@@ -1,38 +1,40 @@
-
 <div class="container d-flex justify-content-end mt-5">
-    <button class="btn btn-dark " >Add Products</button>
+  <a href="admin/add-products">
+    <button class="btn btn-dark">Add Products</button>
+  </a>
 </div>
 
-<div class="container mt-5">
-<table class="table">
+<div style="overflow-x: auto; " class="container mt-5">
+  <table class="table table-striped table-hover border scroll">
 
-  <thead>
-    <tr>
-      <th scope="col">Number</th>
-      <th scope="col">Products</th>
-      <th scope="col">Price</th>
-      <th scope="col">Image</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>John</td>
-      <td>Doe</td>
-      <td>@social</td>
-    </tr>
-  </tbody>
-</table>
+    <thead>
+      <tr>
+
+        <th scope="col">Number</th>
+        <th scope="col">Products</th>
+        <th scope="col">Category</th>
+
+        <th scope="col">Price(₹)</th>
+        <th scope="col">Description</th>
+        <th scope="col">Image</th>
+      </tr>
+    </thead>
+    {{#each products}}
+      <tbody>
+        <tr>
+
+          <td><b>{{inc @index}}</b></td>
+          <td>{{this.name}}</td>
+          <td>{{this.type}}</td>
+          <td>{{this.price}}</td>
+          <td>{{this.description}}</td>
+          <td><img
+              style="width: 5rem;"
+              src="/images/{{this._id}}.png"
+              alt="{{this._id}}.png"
+            /></td>
+        </tr>
+      </tbody>
+    {{/each}}
+  </table>
 </div>
