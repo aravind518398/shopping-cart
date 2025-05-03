@@ -1,0 +1,61 @@
+<div class="container mt-5">
+  <div class="row">
+    <h2 class="text-center">Create new account</h2>
+  </div>
+  <form   class="pt-5" action="" method="post"  >
+     <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        spellcheck="false"
+        name="username"
+        required
+      />
+    </div>
+     <div class="mb-3">
+      <label for="phone" class="form-label">Phone</label>
+      <input  oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+        type="text"
+        class="form-control"
+        id="phone"
+        name="phone"
+        maxlength=10
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        spellcheck="false"
+        name="email"
+        required
+      />
+      <div id="emailHelp" class="form-text">We'll never share your email with
+        anyone else.</div>
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="exampleInputPassword1"
+        name="password"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <div id="emailHelp" class="form-text">Already have an account ?
+        <a style="text-decoration:none;" href="/login">Login</a></div>
+
+    </div>
+
+    <button type="submit" class="btn btn-dark">Signup</button>
+  </form>
+</div>

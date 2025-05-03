@@ -5,7 +5,7 @@ const addProduct = async (product) => {
   const collection = await db.collection("product");
   const result = await collection.insertOne(product);
   
-  console.log("INSERTED ONE DOCUMENT TO MONGODB DATABASE✅");
+  console.log("INSERTED ONE DOCUMENT TO COLLECTION: (PRODUCT)✅");
   const data = await collection.findOne(result.insertedId);
   console.log(data);
 
