@@ -3,7 +3,33 @@
     <h2 class="text-center">Login</h2>
   </div>
   <form action="" method="post" class="pt-5">
+    {{#if loginErr}}
+ <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input style="border-color: #dc3545;"
+        type="email"
+        class="form-control"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        spellcheck="false"
+        name="email"
+        required
+      />
+      <div id="emailHelp" class="form-text text-danger ">{{loginErr}}</div>
+    </div>
     <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input style="border-color: #dc3545;"
+        type="password"
+        class="form-control"
+        id="exampleInputPassword1"
+        name="password"
+        required
+      />
+    </div>
+{{else}}
+
+<div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Email address</label>
       <input
         type="email"
@@ -28,11 +54,15 @@
       />
     </div>
 
+    {{/if}}
+  
+    
     <div class="mb-3">
       <div id="emailHelp" class="form-text">Don't have an account ?
         <a style="text-decoration:none;" href="/signup">Signup</a></div>
 
     </div>
+    
 
     <button type="submit" class="btn btn-dark">Login</button>
   </form>

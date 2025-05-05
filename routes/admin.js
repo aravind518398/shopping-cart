@@ -1,6 +1,7 @@
 var express = require("express");
+var objectId = require('mongodb').ObjectId
 var router = express.Router();
-const { addProduct, getAllProduct } = require("../product-helper/helper");
+const { addProduct, getAllProduct, deleteProduct, editProduct, updateProduct } = require("../product-helper/helper");
 
 /* GET Admin page. */
 router.get("/", async function (req, res, next) {
@@ -36,4 +37,35 @@ router.post("/add-products", async function (req, res, next) {
   }
 });
 
+router.get('/delete-product', async(req,res)=> {
+  const productId = await req.query.id
+  const objId = new objectId(productId)
+  const deletedId = await deleteProduct(objId)
+ res.redirect('/admin')
+})
+
+router.get('/edit-product', async(req,res)=> {
+  const productId = await req.query.id;
+  const objId = new objectId(productId);
+  const product = await editProduct(objId)
+  
+  res.render('./admin-pages/edit-created-product', {admin:true, product})
+})
+
+
+router.post('/edit-product', async(req,res)=> {
+  const body = await req.body;
+  const productId = await req.query.id;
+  
+  const objId = new objectId(productId);
+ 
+  const updatedProduct = await updateProduct(objId,body) 
+  console.log(updatedProduct)
+  res.redirect('/admin');
+
+  if(req.files) {
+    let file = req.files.image ;
+    file.mv("./public/images/"+productId+'.png');
+  }
+})
 module.exports = router;

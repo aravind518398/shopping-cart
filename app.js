@@ -6,7 +6,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var upload = require("express-fileupload");
-
+var session = require('express-session')
 const { engine } = require("express-handlebars");
 const { connectDB } = require("./mongodb/config");
 var adminRouter = require("./routes/admin");
@@ -22,7 +22,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
+app.use(session({secret:'Key', cookie:{maxAge:6000000000}}))
 app.use(express.static(path.join(__dirname, "public")));
 app.engine(
   "hbs",

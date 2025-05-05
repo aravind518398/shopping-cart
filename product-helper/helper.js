@@ -1,5 +1,7 @@
 const { connectDB } = require("../mongodb/config");
 
+
+
 const addProduct = async (product) => {
   const db = await connectDB();
   const collection = await db.collection("product");
@@ -19,10 +21,42 @@ const getAllProduct = async(products) => {
     const collection = await db.collection('product');
     const result = await collection.find();
     const productArray = await result.toArray();
-    console.log(productArray)
+    
     return productArray;
 }
 
+const deleteProduct = async (productId) => {
+  const db = await connectDB();
+  const collection = await db.collection('product');
+  const result = await collection.deleteOne({_id:productId});
+  console.log('DELETED ONE DOCUMENT FROM COLLECTION: (PRODUCT)✅' ,result)
+  return result;
+  
+
+}
 
 
-module.exports = { addProduct, getAllProduct };
+const editProduct = async (productId) => {
+  const db = await connectDB();
+  const collection = await db.collection('product');
+  const result = await collection.findOne({_id:productId});
+  
+  return result;
+}
+
+const updateProduct = async (objId, body) => {
+  const db = await connectDB();
+  const collection = await db.collection('product');
+  const result = await collection.updateOne({_id:objId}, {
+    $set:{
+      name:body.name,
+      type:body.type,
+      price:body.price,
+      description:body.description
+    }
+  });
+  console.log("UPDATED ONE DOCUMENT DETAILS FROM COLLECTION: (PRODUCT)✅", result)
+  return result;
+}
+
+module.exports = { addProduct, getAllProduct, deleteProduct, editProduct, updateProduct };

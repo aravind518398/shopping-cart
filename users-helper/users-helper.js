@@ -1,4 +1,4 @@
-const { response } = require("express");
+const { ObjectId } = require('mongodb');
 const { connectDB } = require("../mongodb/config");
 const bcrypt = require('bcrypt')
 
@@ -14,9 +14,9 @@ const  forSignup = async (userData) => {
     
     console.log("INSERTED ONE DOCUMENT TO COLLECTION: (USER)✅");
     const data = await collection.findOne(result.insertedId);
-    console.log(data);
-  
-    return result;
+    
+    
+    return data;
   };
 
 const forLogin = async(userData)=> {
@@ -44,4 +44,26 @@ const forLogin = async(userData)=> {
 }
 
 
-module.exports = {forSignup, forLogin}
+const addToCart = async(productId, userId) => {
+    const db = await connectDB();
+    console.log("DATABASE IS CONNECTED AT USER-HELPER LINE:49✅")
+    const collection = await db.collection("cart");
+    console.log("ADDED ONE COLLECTION TO DATABASE: (CART)✅")
+    const document = collection.findOne({_id:userId});
+    if (document) {
+        const cartObj = {
+            user:userId,
+            products:[productId]
+        } 
+     const data = collection.insertOne(cartObj)
+     console.log("INSERTED PRODUCT ID AND UID TO COLLECTION: (CART)✅")
+     
+     return data; 
+    } 
+}
+
+
+module.exports = { forSignup, forLogin, addToCart };
+
+
+

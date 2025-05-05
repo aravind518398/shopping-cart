@@ -17,3 +17,13 @@ html::selection {
 }
 
 
+.edit-delete-button {
+    padding-top: 2.5rem !important;
+}
+
+
+@media (max-width: 992px) {
+    .vr {
+      display: none !important;
+    }
+  }
