@@ -2,8 +2,8 @@
   <div class="row">
     <h2 class="text-center">Create new account</h2>
   </div>
-  <form   class="pt-5" action="" method="post"  >
-     <div class="mb-3">
+  <form class="pt-5" action="" method="post">
+    <div class="mb-3">
       <label for="username" class="form-label">Username</label>
       <input
         type="text"
@@ -14,14 +14,15 @@
         required
       />
     </div>
-     <div class="mb-3">
+    <div class="mb-3">
       <label for="phone" class="form-label">Phone</label>
-      <input  oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+      <input
+        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
         type="text"
         class="form-control"
         id="phone"
         name="phone"
-        maxlength=10
+        maxlength="10"
         required
       />
     </div>

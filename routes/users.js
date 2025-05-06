@@ -1,15 +1,13 @@
 var express = require("express");
 var router = express.Router();
-const objectId = require('mongodb').ObjectId
+const objectId = require("mongodb").ObjectId;
 const { getAllProduct } = require("../product-helper/helper");
 const {
   forSignup,
   forLogin,
   addToCart,
+  getCartProducts,
 } = require("../users-helper/users-helper");
-
-
-/* GET users listing. */
 
 router.get("/", async function (req, res, next) {
   let user = req.session.user;
@@ -70,22 +68,26 @@ const varifyLogin = (req, res, next) => {
   }
 };
 
-router.get("/cart", varifyLogin, (req, res) => {
-  res.render("./users-pages/user-cart-page");
+router.get("/cart", varifyLogin, async (req, res) => {
+  let user = req.session.user;
+  const uid = new objectId(req.session.user._id);
+
+  const result = await getCartProducts(uid);
+  const products = await result[0].cartItems;
+
+  res.render("./users-pages/user-cart-page", { admin: false, user, products });
 });
 
-router.get("/add-to-cart",varifyLogin, async(req,res)=> {
+router.get("/add-to-cart", varifyLogin, async (req, res) => {
   const id = req.query.id;
   const productId = new objectId(id);
   // console.log(productId)
-  const userId = new objectId(req.session.user._id) ;
+  const userId = new objectId(req.session.user._id);
   // console.log(uid)
-  const result = await addToCart(productId,userId)
+  const result = await addToCart(productId, userId);
   console.log(result);
 
-
-  res.render("./users-pages/user-cart-page")
-})
-
+  res.redirect("/cart");
+});
 
 module.exports = router;
