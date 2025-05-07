@@ -133,7 +133,7 @@ const getCartProducts = (uid) => {
 
 const removeCartProduct = async (productId, userId) => {
   const db = await connectDB();
-  const collection = db.collection("cart"); 
+  const collection = db.collection("cart");
 
   const document = await collection.updateOne(
     { user: userId },
@@ -157,37 +157,77 @@ const getCartCount = async (userId) => {
 
 const increaseProductCount = async (productId, userId) => {
   const db = await connectDB();
-  const collection = db.collection("cart"); 
+  const collection = db.collection("cart");
 
   const document = await collection.updateOne(
     {
       user: userId,
-      "products.item": productId
+      "products.item": productId,
     },
     {
-      $inc: { "products.$.quantity": +1 }
+      $inc: { "products.$.quantity": +1 },
     }
-
   );
   console.log(document);
 };
 const decreaseProductCount = async (productId, userId) => {
   const db = await connectDB();
-  const collection = db.collection("cart"); 
+  const collection = db.collection("cart");
+  db.collection("product");
 
   const document = await collection.updateOne(
     {
       user: userId,
-      "products.item": productId
+      "products.item": productId,
+      "products.quantity": { $gt: 1 },
     },
     {
-      $inc: { "products.$.quantity": -1 }
+      $inc: { "products.$.quantity": -1 },
     }
-
   );
-  console.log(document);
+  return document;
 };
 
+const getTotalAmount = async (userId) => {
+  const db = await connectDB();
+  const cartCollection = db.collection("cart");
+
+  const totalArray = await cartCollection
+    .aggregate([
+      { $match: { user: userId } },
+      { $unwind: "$products" },
+      {
+        $lookup: {
+          from: "product",
+          localField: "products.item",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          quantity: { $toInt: "$products.quantity" },
+          price: { $toDouble: "$productDetails.price" },
+          subTotal: {
+            $multiply: [
+              { $toInt: "$products.quantity" },
+              { $toDouble: "$productDetails.price" },
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$subTotal" },
+        },
+      },
+    ])
+    .toArray();
+
+  return totalArray[0]?.total || 0;
+};
 
 module.exports = {
   forSignup,
@@ -197,5 +237,6 @@ module.exports = {
   removeCartProduct,
   getCartCount,
   increaseProductCount,
-  decreaseProductCount
+  decreaseProductCount,
+  getTotalAmount,
 };

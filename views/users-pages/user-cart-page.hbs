@@ -4,41 +4,73 @@
 
 <div style="overflow-x: auto; " class="container mt-5">
   <table class="table shadow table-striped table-hover border scroll">
-  <thead>
-    <tr>
-      <th scope="col">Image</th>
-      <th scope="col">Products</th>
-      <th scope="col">Category</th>
-      <th scope="col">Price(₹)</th>
-      <th scope="col">Description</th>
-      <th scope="col">Quantity</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each result}}
-    <tr>
-      <td><img style="width: 5rem;" src="/images/{{this.cartItems._id}}.png" alt="{{this.cartItems._id}}.png" /></td>
-      <td class="td">{{this.cartItems.name}}</td>
-      <td class="td">{{this.cartItems.type}}</td>
-      <td class="td">₹{{this.cartItems.price}}</td>
-      <td class="td">{{this.cartItems.description}}</td>
-      <td class="td">
-       <a href="/decrease-product-count?id={{this.cartItems._id}}">  <span style="cursor: pointer;" class="badge text-bg-success"><b class="w">-</b></span></a>
-        <span>{{this.quantity}}</span>
-       <a href="/increase-product-count?id={{this.cartItems._id}}"> <span style="cursor: pointer;" class="badge text-bg-danger" onclick="changeQuantity({{this.cartItems._id}})"><b>+</b></span></a>
-      </td>
-      <td class="tr">
-        <a onclick="return confirm('Are you want to Remove {{this.cartItems.name}} ?')" href="/remove-cart-product?id={{this.cartItems._id}}">
-          <button class="btn btn-outline-danger">Remove</button>
-        </a>
-      </td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
+    <thead>
+      <tr>
+        <th scope="col">Image</th>
+        <th scope="col">Products</th>
+        <th scope="col">Category</th>
+        <th scope="col">Price(₹)</th>
+        <th scope="col">Description</th>
+        <th scope="col">Quantity</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each result}}
+        <tr>
+          <td><img
+              style="width: 5rem;"
+              src="/images/{{this.cartItems._id}}.png"
+              alt="{{this.cartItems._id}}.png"
+            /></td>
+          <td class="td">{{this.cartItems.name}}</td>
+          <td class="td">{{this.cartItems.type}}</td>
+          <td class="td">₹{{this.cartItems.price}}</td>
+          <td class="td">{{this.cartItems.description}}</td>
+          <td class="td">
 
+            <a
+              id="minus-btn"
+              href="/decrease-product-count?id={{this.cartItems._id}}"
+            >
+              <span style="cursor: pointer;" class="badge text-bg-success"><b
+                  class="w"
+                >-</b></span></a>
+            <span>{{this.quantity}}</span>
+            <a href="/increase-product-count?id={{this.cartItems._id}}">
+              <span
+                style="cursor: pointer;"
+                class="badge text-bg-danger"
+                onclick="changeQuantity({{this.cartItems._id}})"
+              ><b>+</b></span></a>
+          </td>
+          <td class="tr">
+            <a
+              onclick="return confirm('Are you want to Remove {{this.cartItems.name}} ?')"
+              href="/remove-cart-product?id={{this.cartItems._id}}"
+            >
+              <button class="btn btn-outline-danger">Remove</button>
+            </a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 
 </div>
 
+<div class="container mt-3">
+  <div class="row">
+    <div class="col">
+      <h4 class="float-start">Total: ₹{{total}} </h4>
+    </div>
 
+    <div class="col">
+      <a class="float-end" href="/place-order"><button
+          class="btn btn-dark"
+        >Place Order</button></a>
+    </div>
+
+  </div>
+
+</div>

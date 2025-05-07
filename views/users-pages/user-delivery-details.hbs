@@ -1,0 +1,82 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 class="mb-5">Enter Delivery Details</h2>
+      <form method="post" id="checkout-form">
+        <fieldset>
+
+          <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" id="address" class="form-control" name="address" />
+          </div>
+          <div class="mb-3">
+            <label for="pincode" class="form-label">Pincode</label>
+            <input id="pincode" class="form-control" name="pincode" />
+
+          </div>
+
+          <div class="mb-3">
+            <label for="mobile" class="form-label">Mobile</label>
+            <input id="mobile" class="form-control" name="mobile" />
+        <input type="text" name="userId" id="" value="{{user._id}}" hidden>
+          </div>
+
+        </fieldset>
+      
+
+    </div>
+
+    <div class="col-md-12 border-color">
+      <div class="p-3">
+        <h5 class="text-center">Total Amount: ₹{{total}}</h5>
+        <hr />
+        <div class="mt-3">
+          <span>Payment method</span>
+        </div>
+
+        <div class="form-check mt-3">
+          
+          <label class="radio-inline" for="radioDisabled">
+            <input
+            class="form-check-input text-dark"
+            type="radio"
+            name="paymentMethod"
+            
+            checked
+            value="COD"
+          /> COD
+          </label>
+        </div>
+        <div class="form-check mt-3">
+          
+          <label class="radio-inline" for="radioCheckedDisabled">
+            <input
+            class="form-check-input"
+            type="radio"
+            name="paymentMethod"
+            id="radio"
+            value="ONLINE"
+          />Online Payment
+          </label>
+
+        </div>
+        <button class="btn btn-dark mt-3" type="submit">Checkout</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+<script>
+    $('#checkout-form').submit((e)=> {
+        e.preventDefault();
+        $.ajax({
+            url:'/place-order',
+            method:'post',
+            data:$('#checkout-form').serialize(),
+            success:(response)=> {
+                alert(response)
+            }
+        })
+    })
+</script>
