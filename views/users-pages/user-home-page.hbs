@@ -18,8 +18,8 @@
               <h5 class="card-title">₹{{this.price}}</h5>
               <p class="card-text">{{this.type}}</p>
               <p class="card-text">{{this.description}}</p>
-              <a href="/add-to-cart?id={{this._id}}" class="btn btn-dark">Add to
-                cart</a>
+              
+                <button onclick="addToCart('{{this._id}}')" class="btn btn-dark">Add to cart</button>
             </div>
           </div>
         </div>
@@ -29,3 +29,22 @@
     </div>
   </div>
 </section>
+
+<script>
+  function addToCart(productId) {
+  
+    $.ajax({
+      
+      url:'/add-to-cart/?id='+productId,
+      method:'get',
+      success:(response) => {
+        if(response.status) {
+            let count = $('#cart-count').html()
+            count = parseInt(count) + 1
+            $('#cart-count').html(count)
+        }
+      
+      }
+    })
+  }
+</script>

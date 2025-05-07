@@ -7,14 +7,27 @@ const {
   forLogin,
   addToCart,
   getCartProducts,
+  removeCartProduct,
+  getCartCount,
+  increaseProductCount,
+  decreaseProductCount
 } = require("../users-helper/users-helper");
 
 router.get("/", async function (req, res, next) {
   let user = req.session.user;
 
+
+   let count = null
+  if(req.session.user) {
+    let id = req.session.user._id;
+    const userId = new objectId(id);
+     count = await getCartCount(userId);
+  }
+  
+  console.log("CART COUNT IS :" , count);
   const products = await getAllProduct();
 
-  res.render("./users-pages/user-home-page", { admin: false, products, user });
+  res.render("./users-pages/user-home-page", { admin: false, products, user, count });
 });
 
 router.get("/login", (req, res) => {
@@ -73,9 +86,8 @@ router.get("/cart", varifyLogin, async (req, res) => {
   const uid = new objectId(req.session.user._id);
 
   const result = await getCartProducts(uid);
-  const products = await result[0].cartItems;
-
-  res.render("./users-pages/user-cart-page", { admin: false, user, products });
+  // console.log(result)
+  res.render("./users-pages/user-cart-page", { admin: false, user, result });
 });
 
 router.get("/add-to-cart", varifyLogin, async (req, res) => {
@@ -87,7 +99,31 @@ router.get("/add-to-cart", varifyLogin, async (req, res) => {
   const result = await addToCart(productId, userId);
   console.log(result);
 
-  res.redirect("/cart");
+  res.json({status:true})
 });
+
+
+router.get('/remove-cart-product',varifyLogin, async(req,res) => {
+  const id = req.query.id;
+  const productId = new objectId(id);
+  const userId = new objectId(req.session.user._id);
+  const result = await removeCartProduct(productId, userId)
+  res.redirect('/cart')
+})
+router.get('/increase-product-count',varifyLogin, async(req,res) => {
+  const id = req.query.id;
+  const productId = new objectId(id);
+  const userId = new objectId(req.session.user._id);
+  const result = await increaseProductCount(productId, userId)
+  res.redirect('/cart')
+})
+router.get('/decrease-product-count',varifyLogin, async(req,res) => {
+  const id = req.query.id;
+  const productId = new objectId(id);
+  const userId = new objectId(req.session.user._id);
+  const result = await decreaseProductCount(productId, userId)
+  res.redirect('/cart')
+})
+
 
 module.exports = router;

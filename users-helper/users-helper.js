@@ -48,17 +48,40 @@ const addToCart = async (productId, userId) => {
   console.log("ADDED ONE COLLECTION TO DATABASE: (CART)✅");
 
   const document = await collection.findOne({ user: userId });
-  console.log(document)
+  let productObj = {
+    item: productId,
+    quantity: 1,
+  };
+
   if (document) {
-    await collection.updateOne(
-      { user: userId },
-      { $push: { products: productId } }
+    const prod = document.products;
+    const productExist = prod.findIndex(
+      (obj) => obj.item.toString() === productId.toString()
     );
-    console.log("PRODUCT ADDED TO EXISTING USER CART✅");
+
+    console.log(productExist);
+    if (productExist == -1) {
+      console.log("IF");
+      await collection.updateOne(
+        { user: userId },
+        { $push: { products: productObj } }
+      );
+      console.log("PRODUCT ADDED TO EXISTING USER CART✅");
+    } else {
+      console.log("ELSE");
+      await collection.updateOne(
+        {
+          "products.item": productId,
+        },
+        {
+          $inc: { "products.$.quantity": 1 },
+        }
+      );
+    }
   } else {
     const cartObj = {
       user: userId,
-      products: [productId],
+      products: [productObj],
     };
     const data = await collection.insertOne(cartObj);
     console.log("INSERTED PRODUCT ID AND UID TO COLLECTION: (CART)✅");
@@ -69,34 +92,110 @@ const addToCart = async (productId, userId) => {
 
 const getCartProducts = (uid) => {
   return new Promise(async (resolve, reject) => {
-    const db = await connectDB();
-    const collection = db.collection("cart");
-    db.collection("product");
-    const document = collection
-      .aggregate([
-        {
-          $match: { user: uid },
-        },
-        {
-          $lookup: {
-            from: "product",
-            let: { productList: "$products" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $in: ["$_id", "$$productList"],
-                  },
-                },
-              },
-            ],
-            as: "cartItems",
+    try {
+      const db = await connectDB();
+      const collection = db.collection("cart");
+
+      const documents = await collection
+        .aggregate([
+          {
+            $match: { user: uid },
           },
-        },
-      ])
-      .toArray();
-    resolve(document);
+          {
+            $unwind: "$products",
+          },
+          {
+            $project: {
+              item: "$products.item",
+              quantity: "$products.quantity",
+            },
+          },
+          {
+            $lookup: {
+              from: "product",
+              localField: "item",
+              foreignField: "_id",
+              as: "cartItems",
+            },
+          },
+          {
+            $unwind: "$cartItems", // Optional: if you want to flatten the array
+          },
+        ])
+        .toArray();
+
+      resolve(documents);
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
-module.exports = { forSignup, forLogin, addToCart, getCartProducts };
+const removeCartProduct = async (productId, userId) => {
+  const db = await connectDB();
+  const collection = db.collection("cart"); 
+
+  const document = await collection.updateOne(
+    { user: userId },
+    { $pull: { products: { item: productId } } }
+  );
+  console.log(document);
+};
+
+const getCartCount = async (userId) => {
+  const db = await connectDB();
+  const collection = db.collection("cart");
+  const document = await collection.findOne({ user: userId });
+  let count = 0;
+  if (document) {
+    count = document.products.length;
+  } else {
+    count = 0;
+  }
+  return count;
+};
+
+const increaseProductCount = async (productId, userId) => {
+  const db = await connectDB();
+  const collection = db.collection("cart"); 
+
+  const document = await collection.updateOne(
+    {
+      user: userId,
+      "products.item": productId
+    },
+    {
+      $inc: { "products.$.quantity": +1 }
+    }
+
+  );
+  console.log(document);
+};
+const decreaseProductCount = async (productId, userId) => {
+  const db = await connectDB();
+  const collection = db.collection("cart"); 
+
+  const document = await collection.updateOne(
+    {
+      user: userId,
+      "products.item": productId
+    },
+    {
+      $inc: { "products.$.quantity": -1 }
+    }
+
+  );
+  console.log(document);
+};
+
+
+module.exports = {
+  forSignup,
+  forLogin,
+  addToCart,
+  getCartProducts,
+  removeCartProduct,
+  getCartCount,
+  increaseProductCount,
+  decreaseProductCount
+};
